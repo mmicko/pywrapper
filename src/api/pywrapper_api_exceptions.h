@@ -152,11 +152,6 @@ static inline int Err_WarnExplicit(PyObject *category, const char *message, cons
     return safe_noref( PyErr_WarnExplicit(category, message, filename, lineno, module, registry) );
 }
 
-static inline int Err_WarnPy3k(char *message, int stacklevel)
-{
-    return safe_noref( PyErr_WarnPy3k(message, stacklevel) );
-}
-
 static inline int Err_CheckSignals()
 {
     return safe_noref( PyErr_CheckSignals() );
@@ -192,16 +187,6 @@ static inline void Err_WriteUnraisable(PyObject *obj)
 static inline ref<PyObject> UnicodeDecodeError_Create(const char *encoding, const char *object, Py_ssize_t length, Py_ssize_t start, Py_ssize_t end, const char *reason)
 {
     return safe_ref( PyUnicodeDecodeError_Create(encoding, object, length, start, end, reason) );
-}
-
-static inline ref<PyObject> UnicodeEncodeError_Create(const char *encoding, const Py_UNICODE *object, Py_ssize_t length, Py_ssize_t start, Py_ssize_t end, const char *reason)
-{
-    return safe_ref( PyUnicodeEncodeError_Create(encoding, object, length, start, end, reason) );
-}
-
-static inline ref<PyObject> UnicodeTranslateError_Create(const Py_UNICODE *object, Py_ssize_t length, Py_ssize_t start, Py_ssize_t end, const char *reason)
-{
-    return safe_ref( PyUnicodeTranslateError_Create(object, length, start, end, reason) );
 }
 
 static inline ref<PyObject> UnicodeDecodeError_GetEncoding(PyObject *exc)

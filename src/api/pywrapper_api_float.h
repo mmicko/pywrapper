@@ -16,11 +16,6 @@ static inline int Float_CheckExact(PyObject *p)
     return safe_noref( PyFloat_CheckExact(p) );
 }
 
-static inline ref<PyObject> Float_FromString(PyObject *str, char **pend)
-{
-    return safe_ref( PyFloat_FromString(str, pend) );
-}
-
 static inline ref<PyObject> Float_FromDouble(double v)
 {
     return safe_ref( PyFloat_FromDouble(v) );
@@ -49,23 +44,6 @@ static inline double Float_GetMax()
 static inline double Float_GetMin()
 {
     return safe_noref( PyFloat_GetMin() );
-}
-
-static inline int Float_ClearFreeList()
-{
-    return safe_noref( PyFloat_ClearFreeList() );
-}
-
-static inline void Float_AsString(char *buf, PyFloatObject *v)
-{
-    PyFloat_AsString(buf, v);
-    exception::check();
-}
-
-static inline void Float_AsReprString(char *buf, PyFloatObject *v)
-{
-    PyFloat_AsReprString(buf, v);
-    exception::check();
 }
 
 }

@@ -71,16 +71,6 @@ static inline int Object_RichCompareBool(PyObject *o1, PyObject *o2, int opid)
     return safe_noref( PyObject_RichCompareBool(o1, o2, opid) );
 }
 
-static inline int Object_Cmp(PyObject *o1, PyObject *o2, int *result)
-{
-    return safe_noref( PyObject_Cmp(o1, o2, result) );
-}
-
-static inline int Object_Compare(PyObject *o1, PyObject *o2)
-{
-    return safe_noref( PyObject_Compare(o1, o2) );
-}
-
 static inline ref<PyObject> Object_Repr(PyObject *o)
 {
     return safe_ref( PyObject_Repr(o) );
@@ -94,11 +84,6 @@ static inline ref<PyObject> Object_Str(PyObject *o)
 static inline ref<PyObject> Object_Bytes(PyObject *o)
 {
     return safe_ref( PyObject_Bytes(o) );
-}
-
-static inline ref<PyObject> Object_Unicode(PyObject *o)
-{
-    return safe_ref( PyObject_Unicode(o) );
 }
 
 static inline int Object_IsInstance(PyObject *inst, PyObject *cls)

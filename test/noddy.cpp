@@ -47,7 +47,7 @@ Noddy::eval(PyObject* s)
     borrowed_ref<PyObject> global_dict = Module_GetDict(main_module);
     ref<PyObject> local_dict = Dict_New();
 
-    return Eval_EvalCode(code.get_cast<PyCodeObject>(), global_dict, local_dict);
+    return Eval_EvalCode(code, global_dict, local_dict);
 }
 
 ref<PyObject>

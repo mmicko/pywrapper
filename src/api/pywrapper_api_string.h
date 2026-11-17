@@ -1,115 +1,87 @@
-
-
 #ifndef PYTHONWRAPPER_API_STRING__H
 #define PYTHONWRAPPER_API_STRING__H
+
+// Python 3 has no separate str/bytes type for text: these are compatibility
+// aliases that create unicode (str) objects. String_AsString() and friends
+// also accept bytes objects.
 
 namespace py
 {
 
 static inline int String_Check(PyObject *o)
 {
-    return safe_noref( PyString_Check(o) );
+    return safe_noref( PyUnicode_Check(o) );
 }
 
 static inline int String_CheckExact(PyObject *o)
 {
-    return safe_noref( PyString_CheckExact(o) );
+    return safe_noref( PyUnicode_CheckExact(o) );
 }
 
 static inline ref<PyObject> String_FromString(const char *v)
 {
-    return safe_ref( PyString_FromString(v) );
+    return safe_ref( PyUnicode_FromString(v) );
 }
 
 static inline ref<PyObject> String_FromStringAndSize(const char *v, Py_ssize_t len)
 {
-    return safe_ref( PyString_FromStringAndSize(v, len) );
+    return safe_ref( PyUnicode_FromStringAndSize(v, len) );
 }
 
 static inline ref<PyObject> String_FromFormatV(const char *format, va_list vargs)
 {
-    return safe_ref( PyString_FromFormatV(format, vargs) );
+    return safe_ref( PyUnicode_FromFormatV(format, vargs) );
 }
 
 static inline Py_ssize_t String_Size(PyObject *string)
 {
-    return safe_noref( PyString_Size(string) );
+    if( PyBytes_Check(string) )
+    {
+        return safe_noref( PyBytes_Size(string) );
+    }
+
+    Py_ssize_t size = 0;
+    safe_noref( PyUnicode_AsUTF8AndSize(string, &size) );
+    return size;
 }
 
-static inline Py_ssize_t String_GET_SIZE(PyObject *string)
+static inline const char* String_AsString(PyObject *string)
 {
-    return safe_noref( PyString_GET_SIZE(string) );
+    if( PyBytes_Check(string) )
+    {
+        return safe_noref( PyBytes_AsString(string) );
+    }
+
+    return safe_noref( PyUnicode_AsUTF8(string) );
 }
 
-static inline char* String_AsString(PyObject *string)
+static inline int String_AsStringAndSize(PyObject *obj, const char **buffer, Py_ssize_t *length)
 {
-    return safe_noref( PyString_AsString(string) );
-}
+    if( PyBytes_Check(obj) )
+    {
+        return safe_noref( PyBytes_AsStringAndSize(obj, const_cast<char**>(buffer), length) );
+    }
 
-static inline char* String_AS_STRING(PyObject *string)
-{
-    return safe_noref( PyString_AS_STRING(string) );
-}
-
-static inline int String_AsStringAndSize(PyObject *obj, char **buffer, Py_ssize_t *length)
-{
-    return safe_noref( PyString_AsStringAndSize(obj, buffer, length) );
-}
-
-static inline void String_Concat(replace_ref<PyObject> string, PyObject *newpart)
-{
-    PyString_Concat(string, newpart);
-    exception::check();
-}
-
-static inline void String_ConcatAndDel(replace_ref<PyObject> string, stolen_ref<PyObject> newpart)
-{
-    PyString_ConcatAndDel(string, newpart.release());
-    exception::check();
-}
-
-static inline int _String_Resize(PyObject **string, Py_ssize_t newsize)
-{
-    return safe_noref( _PyString_Resize(string, newsize) );
+    *buffer = safe_noref( PyUnicode_AsUTF8AndSize(obj, length) );
+    return 0;
 }
 
 static inline ref<PyObject> String_Format(PyObject *format, PyObject *args)
 {
-    return safe_ref( PyString_Format(format, args) );
+    return safe_ref( PyUnicode_Format(format, args) );
 }
 
 static inline void String_InternInPlace(PyObject **string)
 {
-    PyString_InternInPlace(string);
+    PyUnicode_InternInPlace(string);
     exception::check();
 }
 
 static inline ref<PyObject> String_InternFromString(const char *v)
 {
-    return safe_ref( PyString_InternFromString(v) );
-}
-
-static inline ref<PyObject> String_Decode(const char *s, Py_ssize_t size, const char *encoding, const char *errors)
-{
-    return safe_ref( PyString_Decode(s, size, encoding, errors) );
-}
-
-static inline ref<PyObject> String_AsDecodedObject(PyObject *str, const char *encoding, const char *errors)
-{
-    return safe_ref( PyString_AsDecodedObject(str, encoding, errors) );
-}
-
-static inline ref<PyObject> String_Encode(const char *s, Py_ssize_t size, const char *encoding, const char *errors)
-{
-    return safe_ref( PyString_Encode(s, size, encoding, errors) );
-}
-
-static inline ref<PyObject> String_AsEncodedObject(PyObject *str, const char *encoding, const char *errors)
-{
-    return safe_ref( PyString_AsEncodedObject(str, encoding, errors) );
+    return safe_ref( PyUnicode_InternFromString(v) );
 }
 
 }
 
 #endif // PYTHONWRAPPER_API_API_STRING__H
-

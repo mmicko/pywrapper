@@ -26,11 +26,6 @@ static inline ref<PyObject> Number_Multiply(PyObject *o1, PyObject *o2)
     return safe_ref( PyNumber_Multiply(o1, o2) );
 }
 
-static inline ref<PyObject> Number_Divide(PyObject *o1, PyObject *o2)
-{
-    return safe_ref( PyNumber_Divide(o1, o2) );
-}
-
 static inline ref<PyObject> Number_FloorDivide(PyObject *o1, PyObject *o2)
 {
     return safe_ref( PyNumber_FloorDivide(o1, o2) );
@@ -116,11 +111,6 @@ static inline ref<PyObject> Number_InPlaceMultiply(PyObject *o1, PyObject *o2)
     return safe_ref( PyNumber_InPlaceMultiply(o1, o2) );
 }
 
-static inline ref<PyObject> Number_InPlaceDivide(PyObject *o1, PyObject *o2)
-{
-    return safe_ref( PyNumber_InPlaceDivide(o1, o2) );
-}
-
 static inline ref<PyObject> Number_InPlaceFloorDivide(PyObject *o1, PyObject *o2)
 {
     return safe_ref( PyNumber_InPlaceFloorDivide(o1, o2) );
@@ -164,21 +154,6 @@ static inline ref<PyObject> Number_InPlaceXor(PyObject *o1, PyObject *o2)
 static inline ref<PyObject> Number_InPlaceOr(PyObject *o1, PyObject *o2)
 {
     return safe_ref( PyNumber_InPlaceOr(o1, o2) );
-}
-
-static inline int Number_Coerce(PyObject **p1, PyObject **p2)
-{
-    return safe_noref( PyNumber_Coerce(p1, p2) );
-}
-
-static inline int Number_CoerceEx(PyObject **p1, PyObject **p2)
-{
-    return safe_noref( PyNumber_CoerceEx(p1, p2) );
-}
-
-static inline ref<PyObject> Number_Int(PyObject *o)
-{
-    return safe_ref( PyNumber_Int(o) );
 }
 
 static inline ref<PyObject> Number_Long(PyObject *o)

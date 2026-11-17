@@ -27,13 +27,13 @@
 
 
 #define PYTHONWRAPPER_METH_KEYWORDS(class_name, func_name, flags, docstring) \
-    { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyCFunctionWithKeywords>(wrappers::meth_keywords<class_name, &class_name::func_name>)), METH_KEYWORDS | (flags), docstring }
+    { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyCFunctionWithKeywords>(wrappers::meth_keywords<class_name, &class_name::func_name>)), METH_VARARGS | METH_KEYWORDS | (flags), docstring }
 
 #define PYTHONWRAPPER_METH_O(class_name, func_name, flags, docstring) \
     { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_o<class_name, &class_name::func_name>)), METH_O | (flags), docstring }
 
 #define PYTHONWRAPPER_METH_NOARGS(class_name, func_name, flags, docstring) \
-    { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyNoArgsFunction>(wrappers::meth_noargs<class_name, &class_name::func_name>)), METH_NOARGS | (flags), docstring }
+    { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_noargs<class_name, &class_name::func_name>)), METH_NOARGS | (flags), docstring }
 
 #define PYTHONWRAPPER_METH_VARARGS(class_name, func_name, flags, docstring) \
     { #func_name, reinterpret_cast<PyCFunction>(static_cast<PyCFunction>(wrappers::meth_varargs<class_name, &class_name::func_name>)), METH_VARARGS | (flags), docstring }
@@ -66,7 +66,7 @@
     { \
         #func_name, \
         reinterpret_cast<PyCFunction>(static_cast<PyCFunctionWithKeywords>(wrappers::meth_keywords<func_name>)), \
-        METH_KEYWORDS | (flags), \
+        METH_VARARGS | METH_KEYWORDS | (flags), \
         docstring \
     }
 
@@ -164,8 +164,8 @@ int cmpfunc(PyObject *self, PyObject *rhs)
     return -1;
 }
 
-template<typename P, long (P::*F)()>
-long hashfunc(PyObject* self)
+template<typename P, Py_hash_t (P::*F)()>
+Py_hash_t hashfunc(PyObject* self)
 {
     assert( self );
 
@@ -178,6 +178,29 @@ long hashfunc(PyObject* self)
     PYTHONWRAPPER_CATCH
 
     return -1;
+}
+
+template<typename P, int (P::*F)(PyObject*)>
+PyObject* richcmpfunc(PyObject *self, PyObject *rhs, int op)
+{
+    assert( self );
+
+    try
+    {
+        if( Py_TYPE(rhs) != Py_TYPE(self) && !PyType_IsSubtype(Py_TYPE(rhs), Py_TYPE(self)) )
+        {
+            Py_RETURN_NOTIMPLEMENTED;
+        }
+
+        P* p = reinterpret_cast<P*>(self);
+
+        int c = (p->*F)(rhs);
+
+        Py_RETURN_RICHCOMPARE(c, 0, op);
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
 }
 
 template<typename P, Py_ssize_t (P::*F)()>
@@ -499,7 +522,7 @@ PyObject* meth_o(PyObject* self_, PyObject* o)
 }
 
 template<typename S, ref<PyObject> (S::*F)()>
-PyObject* meth_noargs(PyObject* self_)
+PyObject* meth_noargs(PyObject* self_, PyObject*)
 {
     try
     {
@@ -539,7 +562,7 @@ PyObject* meth_noargs(PyObject*, PyObject*)
 }
 
 template<typename S, void (S::*F)()>
-PyObject* meth_noargs(PyObject* self_)
+PyObject* meth_noargs(PyObject* self_, PyObject*)
 {
     try
     {

@@ -26,16 +26,6 @@ static inline borrowed_ref<PyObject> Module_GetDict(PyObject *module)
     return safe_borrowed_ref( PyModule_GetDict(module) );
 }
 
-static inline char* Module_GetName(PyObject *module)
-{
-    return safe_noref( PyModule_GetName(module) );
-}
-
-static inline char* Module_GetFilename(PyObject *module)
-{
-    return safe_noref( PyModule_GetFilename(module) );
-}
-
 static inline int Module_AddObject(PyObject *module, const char *name, stolen_ref<PyObject> value)
 {
     return safe_noref( PyModule_AddObject(module, name, value.release() ) );

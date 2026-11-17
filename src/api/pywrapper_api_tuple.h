@@ -62,11 +62,6 @@ static inline int _Tuple_Resize(PyObject **p, Py_ssize_t newsize)
     return safe_noref( _PyTuple_Resize(p, newsize) );
 }
 
-static inline int Tuple_ClearFreeList()
-{
-    return safe_noref( PyTuple_ClearFreeList() );
-}
-
 }
 
 #endif // PYTHONWRAPPER_API_API_TUPLE__H

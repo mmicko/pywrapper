@@ -6,11 +6,6 @@
 namespace py
 {
 
-static inline int Main(int argc, char **argv)
-{
-    return safe_noref( Py_Main(argc, argv) );
-}
-
 static inline int Run_AnyFile(FILE *fp, const char *filename)
 {
     return safe_noref( PyRun_AnyFile(fp, filename) );
@@ -76,26 +71,6 @@ static inline int Run_InteractiveLoopFlags(FILE *fp, const char *filename, PyCom
     return safe_noref( PyRun_InteractiveLoopFlags(fp, filename, flags) );
 }
 
-static inline struct _node* Parser_SimpleParseString(const char *str, int start)
-{
-    return safe_noref( PyParser_SimpleParseString(str, start) );
-}
-
-static inline struct _node* Parser_SimpleParseStringFlags(const char *str, int start, int flags)
-{
-    return safe_noref( PyParser_SimpleParseStringFlags(str, start, flags) );
-}
-
-static inline struct _node* Parser_SimpleParseFile(FILE *fp, const char *filename, int start)
-{
-    return safe_noref( PyParser_SimpleParseFile(fp, filename, start) );
-}
-
-static inline struct _node* Parser_SimpleParseFileFlags(FILE *fp, const char *filename, int start, int flags)
-{
-    return safe_noref( PyParser_SimpleParseFileFlags(fp, filename, start, flags) );
-}
-
 static inline ref<PyObject> Run_String(const char *str, int start, PyObject *globals, PyObject *locals)
 {
     return safe_ref( PyRun_String(str, start, globals, locals) );
@@ -136,16 +111,6 @@ static inline ref<PyObject> CompileStringFlags(const char *str, const char *file
     return safe_ref( Py_CompileStringFlags(str, filename, start, flags) );
 }
 
-static inline ref<PyObject> Eval_EvalCode(PyCodeObject *co, PyObject *globals, PyObject *locals)
-{
-    return safe_ref( PyEval_EvalCode(co, globals, locals) );
-}
-
-static inline ref<PyObject> Eval_EvalCodeEx(PyCodeObject *co, PyObject *globals, PyObject *locals, PyObject **args, int argcount, PyObject **kws, int kwcount, PyObject **defs, int defcount, PyObject *closure)
-{
-    return safe_ref( PyEval_EvalCodeEx(co, globals, locals, args, argcount, kws, kwcount, defs, defcount, closure) );
-}
-
 static inline ref<PyObject> Eval_EvalFrame(PyFrameObject *f)
 {
     return safe_ref( PyEval_EvalFrame(f) );
@@ -159,6 +124,11 @@ static inline ref<PyObject> Eval_EvalFrameEx(PyFrameObject *f, int throwflag)
 static inline int Eval_MergeCompilerFlags(PyCompilerFlags *cf)
 {
     return safe_noref( PyEval_MergeCompilerFlags(cf) );
+}
+
+static inline ref<PyObject> Eval_EvalCode(PyObject *co, PyObject *globals, PyObject *locals)
+{
+    return safe_ref( PyEval_EvalCode(co, globals, locals) );
 }
 
 }

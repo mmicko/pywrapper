@@ -68,36 +68,6 @@ static inline Py_buffer* MemoryView_GET_BUFFER(PyObject *obj)
     return safe_noref( PyMemoryView_GET_BUFFER(obj) );
 }
 
-static inline int Buffer_Check(PyObject *p)
-{
-    return safe_noref( PyBuffer_Check(p) );
-}
-
-static inline ref<PyObject> Buffer_FromObject(PyObject *base, Py_ssize_t offset, Py_ssize_t size)
-{
-    return safe_ref( PyBuffer_FromObject(base, offset, size) );
-}
-
-static inline ref<PyObject> Buffer_FromReadWriteObject(PyObject *base, Py_ssize_t offset, Py_ssize_t size)
-{
-    return safe_ref( PyBuffer_FromReadWriteObject(base, offset, size) );
-}
-
-static inline ref<PyObject> Buffer_FromMemory(void *ptr, Py_ssize_t size)
-{
-    return safe_ref( PyBuffer_FromMemory(ptr, size) );
-}
-
-static inline ref<PyObject> Buffer_FromReadWriteMemory(void *ptr, Py_ssize_t size)
-{
-    return safe_ref( PyBuffer_FromReadWriteMemory(ptr, size) );
-}
-
-static inline ref<PyObject> Buffer_New(Py_ssize_t size)
-{
-    return safe_ref( PyBuffer_New(size) );
-}
-
 }
 
 #endif // PYTHONWRAPPER_API_API_BUFFER__H

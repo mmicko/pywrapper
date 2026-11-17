@@ -12,12 +12,6 @@ static inline void Object_GC_Track(PyObject *op)
     exception::check();
 }
 
-static inline void _Object_GC_TRACK(PyObject *op)
-{
-    _PyObject_GC_TRACK(op);
-    exception::check();
-}
-
 static inline void Object_GC_Del(void *op)
 {
     PyObject_GC_Del(op);
@@ -27,12 +21,6 @@ static inline void Object_GC_Del(void *op)
 static inline void Object_GC_UnTrack(void *op)
 {
     PyObject_GC_UnTrack(op);
-    exception::check();
-}
-
-static inline void _Object_GC_UNTRACK(PyObject *op)
-{
-    _PyObject_GC_UNTRACK(op);
     exception::check();
 }
 

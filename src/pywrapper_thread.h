@@ -9,35 +9,6 @@
 namespace py
 {
 
-class gil_lock :
-    utils::noncopyable
-{
-public:
-    gil_lock()
-    {
-        PyEval_AcquireLock();
-        _held = true;
-    }
-
-    ~gil_lock()
-    {
-        release();
-    }
-
-    void release()
-    {
-        if( _held)
-        {
-            PyEval_ReleaseLock();
-            _held = false;
-        }
-    }
-
-private:
-
-    bool _held;
-};
-
 class restore_tstate :
     utils::noncopyable
 {
@@ -106,6 +77,11 @@ public:
         return _ts;
     }
 
+    void release()
+    {
+        _ts = nullptr;
+    }
+
 private:
     PyThreadState* _ts;
 };
@@ -118,20 +94,26 @@ public:
     struct thread_scope :
         utils::noncopyable
     {
-        gil_lock _lock;
         thread_state _state;
-        swap_tstate _swap;
 
         thread_scope(const sub_interpreter& interp) :
-	    _state(interp.interp()),
-	    _swap(_state)
+            _state(interp.interp())
         {
+            PyEval_RestoreThread(_state);
         }
 
         thread_scope(PyInterpreterState *interp) :
-            _state(interp),
-            _swap(_state)
+            _state(interp)
         {
+            PyEval_RestoreThread(_state);
+        }
+
+        ~thread_scope()
+        {
+            // thread_state's destructor runs after this, while the GIL is still held
+            PyThreadState_Clear(_state);
+            PyThreadState_DeleteCurrent();
+            _state.release();
         }
     };
 

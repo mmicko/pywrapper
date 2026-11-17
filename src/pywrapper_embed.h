@@ -7,15 +7,26 @@ namespace py
 class initialize
 {
 public:
-	initialize(char* name=0, int initsigs = 1)
+	initialize(const char* name=0, int initsigs = 1, bool site_import = true)
 	{
+		PyConfig config;
+		PyConfig_InitPythonConfig(&config);
+
+		config.install_signal_handlers = initsigs;
+		config.site_import = site_import ? 1 : 0;
+
 		if ( name )
 		{
-			Py_SetProgramName(name);
+			PyConfig_SetBytesString(&config, &config.program_name, name);
 		}
 
-		Py_InitializeEx(initsigs);
-        PyEval_InitThreads();
+		PyStatus status = Py_InitializeFromConfig(&config);
+		PyConfig_Clear(&config);
+
+		if ( PyStatus_Exception(status) )
+		{
+			Py_ExitStatusException(status);
+		}
 	}
 
 	~initialize()

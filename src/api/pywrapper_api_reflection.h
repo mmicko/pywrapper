@@ -31,11 +31,6 @@ static inline int Frame_GetLineNumber(PyFrameObject *frame)
     return safe_noref( PyFrame_GetLineNumber(frame) );
 }
 
-static inline int Eval_GetRestricted()
-{
-    return safe_noref( PyEval_GetRestricted() );
-}
-
 static inline const char* Eval_GetFuncName(PyObject *func)
 {
     return safe_noref( PyEval_GetFuncName(func) );

@@ -56,11 +56,6 @@ static inline ref<PyObject> Long_FromString(char *str, char **pend, int base)
     return safe_ref( PyLong_FromString(str, pend, base) );
 }
 
-static inline ref<PyObject> Long_FromUnicode(Py_UNICODE *u, Py_ssize_t length, int base)
-{
-    return safe_ref( PyLong_FromUnicode(u, length, base) );
-}
-
 static inline ref<PyObject> Long_FromVoidPtr(void *p)
 {
     return safe_ref( PyLong_FromVoidPtr(p) );

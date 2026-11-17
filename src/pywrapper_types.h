@@ -160,8 +160,7 @@ private:
 
 template<typename user_type, typename header_type>
 PyTypeObject type_base<user_type, header_type>::_type = {
-    PyObject_HEAD_INIT(NULL)
-    0
+    PyVarObject_HEAD_INIT(NULL, 0)
 };
 
 template<typename user_type, typename header_type=object_header>

@@ -11,11 +11,6 @@ static inline ref<PyObject> Import_ImportModule(const char *name)
     return safe_ref( PyImport_ImportModule(name) );
 }
 
-static inline ref<PyObject> Import_ImportModuleNoBlock(const char *name)
-{
-    return safe_ref( PyImport_ImportModuleNoBlock(name) );
-}
-
 static inline ref<PyObject> Import_ImportModuleEx(char *name, PyObject *globals, PyObject *locals, PyObject *fromlist)
 {
     return safe_ref( PyImport_ImportModuleEx(name, globals, locals, fromlist) );
@@ -66,42 +61,9 @@ static inline ref<PyObject> Import_GetImporter(PyObject *path)
     return safe_ref( PyImport_GetImporter(path) );
 }
 
-static inline void _Import_Init()
-{
-    _PyImport_Init();
-    exception::check();
-}
-
-static inline void Import_Cleanup()
-{
-    PyImport_Cleanup();
-    exception::check();
-}
-
-static inline void _Import_Fini()
-{
-    _PyImport_Fini();
-    exception::check();
-}
-
-static inline ref<PyObject> _Import_FindExtension(char * arg0, char * arg1)
-{
-    return safe_ref( _PyImport_FindExtension(arg0, arg1) );
-}
-
-static inline ref<PyObject> _Import_FixupExtension(char * arg0, char * arg1)
-{
-    return safe_ref( _PyImport_FixupExtension(arg0, arg1) );
-}
-
 static inline int Import_ImportFrozenModule(char *name)
 {
     return safe_noref( PyImport_ImportFrozenModule(name) );
-}
-
-static inline int Import_AppendInittab(const char *name, void (*initfunc)(void))
-{
-    return safe_noref( PyImport_AppendInittab(name, initfunc) );
 }
 
 static inline int Import_ExtendInittab(struct _inittab *newtab)

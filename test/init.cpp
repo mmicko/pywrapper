@@ -5,23 +5,33 @@
 #include <iostream>
 
 PyMODINIT_FUNC
-initnoddy()
+PyInit_noddy()
 {
 	using namespace py;
 	using namespace std;
 
-    PyMethodDef pywrapper_methods[] = {
+    static PyMethodDef pywrapper_methods[] = {
         { 0 } };
 
-    borrowed_ref<PyObject> mod = InitModule4(
+    static PyModuleDef noddy_module = {
+        PyModuleDef_HEAD_INIT,
         "noddy",
-        pywrapper_methods,
         "pywrapper doctring",
-        NULL,
-        PYTHON_API_VERSION
-        );
+        -1,
+        pywrapper_methods
+    };
 
-    pyext::Noddy::initialize(mod);
+    try
+    {
+        ref<PyObject> mod = safe_ref( PyModule_Create(&noddy_module) );
 
-    Module_AddObject( mod, "yyy", Int_FromLong(5) );
+        pyext::Noddy::initialize(mod);
+
+        Module_AddObject( mod, "yyy", Int_FromLong(5) );
+
+        return mod.release();
+    }
+    PYTHONWRAPPER_CATCH
+
+    return NULL;
 }
